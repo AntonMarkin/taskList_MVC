@@ -2,7 +2,7 @@
 
 class userModel extends Model
 {
-    public function getCurrentUser()
+    public static function getCurrentUser()
     {
         $pdo = connectDB();
         $user = $pdo->prepare('select * from users where id = ?');
