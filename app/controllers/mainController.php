@@ -1,26 +1,26 @@
 <?php
 
-require_once 'model_task.php';
-require_once 'model_user.php';
+require_once 'app/models/taskModel.php';
+require_once 'app/models/userModel.php';
 
 class mainController extends Controller
 {
     public $userId;
+
     function __construct()
     {
         $this->userId = userModel::getCurrentUser()['id'];
         $this->model = new taskModel();
         $this->view = new View();
     }
+
     public function actionIndex()
     {
         $tasks = $this->model->getUserTasks($this->userId);
-        $data = null;
         if (isset($tasks)) {
             foreach ($tasks as $task) {
                 $status = $task['status'];
                 $taskData = [
-                    'description' => $task['description'],
                     'text' => null,
                 ];
                 if ($status == 'Unready') {
@@ -34,35 +34,44 @@ class mainController extends Controller
                     $statusClass = 'border-success';
                     $newStatus = 'Unready';
 
-                    $taskData = ['text' => 'text-success'];
+                    $taskData['text'] = 'text-success';
                 }
-                $taskData = [
+                $taskData += [
+                    'taskId' => $task['id'],
+                    'description' => $task['description'],
                     'buttonStatus' => $buttonStatus,
                     'button' => $button,
                     'statusClass' => $statusClass,
                     'newStatus' => $newStatus,
                 ];
-                $data = [$taskData];
+                $data[] = $taskData;
             }
         }
         $this->view->generate('main_view.php', $data);
     }
+
     public function actionAddTask()
     {
-        return $this->model->addTask($this->userId, $_POST['description']);
+        $this->model->addTask($this->userId, $_POST['description']);
+        header('Location: /');
     }
+
     public function actionChangeTaskStatus()
     {
         $id = $_POST['id'];
         settype($id, 'int');
-        return $this->model->changeTaskStatus($id, $_POST['status'], $this->userId);
+        $this->model->changeTaskStatus($id, $_POST['status'], $this->userId);
+        header('Location: /');
     }
+
     public function actionDeleteTask()
     {
         $id = $_POST['id'];
         settype($id, 'int');
-        return $this->model->deleteTask($id, $this->userId);
+        $this->model->deleteTask($id, $this->userId);
+        header('Location: /');
     }
+
     public function actionReadyAllTasks()
     {
         $tasks = $this->model->getUserTasks($this->userId);
@@ -71,7 +80,9 @@ class mainController extends Controller
                 $this->model->changeTaskStatus($task['id'], 'Ready', $task['user_id']);
             }
         }
+        header('Location: /');
     }
+
     public function actionRemoveAllTasks()
     {
         $tasks = $this->model->getUserTasks($this->userId);
@@ -80,5 +91,6 @@ class mainController extends Controller
                 $this->model->deleteTask($task['id'], $task['user_id']);
             }
         }
+        header('Location: /');
     }
 }
