@@ -1,18 +1,20 @@
 <?php
 
-require_once 'app/models/userModel.php';
-
-class loginController extends Controller
+class LoginController extends Controller
 {
     function __construct()
     {
-        $this->model = new userModel();
+        $this->model = new user();
         $this->view = new View();
     }
 
     public function actionIndex()
     {
-        $this->view->generate('login_view.php');
+        if (isset($_SESSION['session_username'])) {
+            header('Location: /');
+        } else {
+            $this->view->generate('login_view.php');
+        }
     }
 
     public function actionLogin()
@@ -20,11 +22,8 @@ class loginController extends Controller
         $login = htmlspecialchars($_POST['login']);
         $password = htmlspecialchars($_POST['password']);
         if (!empty($login) && !empty($password)) {
-
-            $query = $this->model->login();
-            $userExist = $query->execute(array($login));
-            $user = $query->fetch();
-            if ($userExist && password_verify($password, $user['password'])) {
+            $user = $this->model->login($login);
+            if (password_verify($password, $user['password'])) {
                 session_start();
                 $_SESSION['session_username'] = $user['id'];
                 header('Location: /');
@@ -36,7 +35,7 @@ class loginController extends Controller
         session_start();
         unset($_SESSION['session_username']);
         session_destroy();
-        $this->actionIndex();
+        header('Location: /Login/Index');
     }
 
 }

@@ -1,9 +1,3 @@
-<?php
-
-if(isset($_SESSION['session_username'])){
-    header('Location: /');
-}
-?>
 <div class="container">
     <div id="login">
         <h1>Вход</h1>

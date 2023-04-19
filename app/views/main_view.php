@@ -1,8 +1,3 @@
-<?php
-if (!isset($_SESSION['session_username'])) {
-    header('Location: /login/Index');
-}
-?>
 <div class="container py-4 pb-md-4 mx-auto text-center">
 
     <div class="mx-auto justify-content-center">
@@ -18,13 +13,14 @@ if (!isset($_SESSION['session_username'])) {
         <a href="/main/RemoveAllTasks" class="btn btn-danger col-sm-2">REMOVE ALL</a>
         <a href="/main/ReadyAllTasks" class="btn btn-success col-sm-2">READY ALL</a>
 
-        </div>
-        <hr>
+    </div>
+    <hr>
 
-        <div class="row row-cols-1 row-cols-md-1 mb-3 mx-auto justify-content-center">
-            <?php
-            if (isset($data))
-                foreach ($data as $item) {
+    <div class="row row-cols-1 row-cols-md-1 mb-3 mx-auto justify-content-center">
+        <?php
+        if (isset($data))
+            foreach ($data as $key => $item) {
+                if ($key != 'user') {
                     echo ' <div class="col-auto ">
                 <div class="card mx-auto mb-3 ' . $item['statusClass'] . ' border-3" style="max-width: 30rem;">
                     <div class="row g-0">
@@ -59,7 +55,8 @@ if (!isset($_SESSION['session_username'])) {
                 </div>
             </div>';
                 }
-            ?>
-        </div>
+            }
+        ?>
     </div>
+</div>
 </div>

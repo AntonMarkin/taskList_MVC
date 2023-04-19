@@ -2,7 +2,7 @@
 
 include_once('connection.php');
 
-class taskModel extends Model
+class Task extends Model
 {
     public function getUserTasks($userId)
     {
@@ -18,18 +18,25 @@ class taskModel extends Model
         $check = $query->execute([$user_id, $description, 'Unready']);
         return $check;
     }
-    public function changeTaskStatus($id, $status, $user_id)
+    public function changeTaskStatus($status, $id, $user_id)
     {
         $pdo = connectDB();
-        $query = $pdo->prepare('update tasks set status = ? where user_id = ? and id = ?');
-        $check = $query->execute([$status, $user_id, $id]);
+        $query = $pdo->prepare('update tasks set status = ? where id = ? and user_id = ?');
+        $check = $query->execute([$status, $id, $user_id]);
         return $check;
     }
     public function deleteTask($id, $user_id)
     {
         $pdo = connectDB();
-        $query = $pdo->prepare('delete from tasks where user_id = ? and id = ?');
-        $check = $query->execute([$user_id, $id]);
+        $query = $pdo->prepare('delete from tasks where id = ? and user_id = ?');
+        $check = $query->execute([$id, $user_id]);
+        return $check;
+    }
+    public function deleteAllTasks($user_id)
+    {
+        $pdo = connectDB();
+        $query = $pdo->prepare('delete from tasks where user_id = ?');
+        $check = $query->execute(array($user_id));
         return $check;
     }
 }

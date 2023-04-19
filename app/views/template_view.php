@@ -1,6 +1,4 @@
 <?php
-//require_once 'app/controllers/loginController.php';
-require_once 'app/models/userModel.php';
 
 ?>
 <!DOCTYPE html>
@@ -20,7 +18,7 @@ require_once 'app/models/userModel.php';
         <?php
         if (isset($_SESSION['session_username'])) {
             echo '        <ul class="nav nav-pills">
-            <li class="nav-item"><a href="" class="nav-link text-muted">' . userModel::getCurrentUser()['login'] . '</a></li>
+            <li class="nav-item"><a href="" class="nav-link text-muted">' . $data['user']['login'] . '</a></li>
             <li class="nav-item"><a href="/login/Logout" class="nav-link">Выход</a></li>
         </ul>';
         }
@@ -35,7 +33,7 @@ require_once 'app/models/userModel.php';
         <?php
         if (isset($_SESSION['session_username'])) {
             echo '<ul class="nav justify-content-center border-bottom pb-3 mb-3">
-            <li class="nav-item"><a href="" class="nav-link px-2 text-muted">' . userModel::getCurrentUser()['login'] . '</a></li>
+            <li class="nav-item"><a href="" class="nav-link px-2 text-muted">' . $data['user']['login'] . '</a></li>
             <li class="nav-item"><a href="/login/Logout" class="nav-link px-2 text-muted">Выход</a></li>
         </ul>';
         }
